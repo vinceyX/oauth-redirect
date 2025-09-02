@@ -4,34 +4,27 @@
   <meta charset="UTF-8" />
   <title>正在跳转到应用...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 2rem;
-    }
-  </style>
 </head>
 <body>
   <h1>正在打开应用...</h1>
-  <p>如果没有自动跳转，请手动点击下面的链接。</p>
-  <a id="openAppLink" href="#">打开应用</a>
+  <p>如果没有自动跳转，请点击下面的按钮：</p>
+  <button id="openAppBtn">打开应用</button>
 
   <script>
-    // 解析 URL 参数
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    const state = params.get('state'); // 如果有 state 参数也可以带回去
+    const state = params.get('state');
+    const schemeUrl = `mgoshort://callback?code=${encodeURIComponent(code || '')}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
 
-    if (code) {
-      // 自定义 Scheme 回调
-      const schemeUrl = `mgoshort://callback?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
-      document.getElementById('openAppLink').href = schemeUrl;
-      // 自动跳转
+    // 自动跳转（Chrome 等支持的浏览器）
+    setTimeout(() => {
       window.location.href = schemeUrl;
-    } else {
-      document.body.innerHTML = '<h1>缺少授权码</h1>';
-    }
+    }, 500);
+
+    // 按钮点击跳转（Edge 等需要用户交互的浏览器）
+    document.getElementById('openAppBtn').addEventListener('click', () => {
+      window.location.href = schemeUrl;
+    });
   </script>
 </body>
 </html>
