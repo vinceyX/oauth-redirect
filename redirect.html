@@ -1,30 +1,25 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <title>正在跳转到应用...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
-  <h1>正在打开应用...</h1>
-  <p>如果没有自动跳转，请点击下面的按钮：</p>
-  <button id="openAppBtn">打开应用</button>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const oauthToken = params.get('oauth_token');
+  const oauthVerifier = params.get('oauth_verifier');
+  const code = params.get('code'); // 如果用 OAuth 2.0
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const state = params.get('state');
-    const schemeUrl = `mgoshort://callback?code=${encodeURIComponent(code || '')}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+  let schemeUrl = 'myapp://callback';
+  const query = [];
 
-    // 自动跳转（Chrome 等支持的浏览器）
-    setTimeout(() => {
-      window.location.href = schemeUrl;
-    }, 500);
+  if (oauthToken) query.push(`oauth_token=${encodeURIComponent(oauthToken)}`);
+  if (oauthVerifier) query.push(`oauth_verifier=${encodeURIComponent(oauthVerifier)}`);
+  if (code) query.push(`code=${encodeURIComponent(code)}`);
 
-    // 按钮点击跳转（Edge 等需要用户交互的浏览器）
-    document.getElementById('openAppBtn').addEventListener('click', () => {
-      window.location.href = schemeUrl;
-    });
-  </script>
-</body>
-</html>
+  if (query.length) {
+    schemeUrl += '?' + query.join('&');
+  }
+
+  // 自动跳转
+  setTimeout(() => {
+    window.location.href = schemeUrl;
+  }, 500);
+
+  // 按钮兜底
+  document.body.innerHTML += `<p><a href="${schemeUrl}">打开应用</a></p>`;
+</script>
