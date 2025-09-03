@@ -4,7 +4,7 @@
   const oauthVerifier = params.get('oauth_verifier');
   const code = params.get('code'); // 如果用 OAuth 2.0
 
-  let schemeUrl = 'mgoshort://callback';
+  let schemeUrl = 'mgoshort://auth';
   const query = [];
 
   if (oauthToken) query.push(`oauth_token=${encodeURIComponent(oauthToken)}`);
