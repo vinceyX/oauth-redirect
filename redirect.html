@@ -1,25 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>正在返回应用...</title>
 <script>
   const params = new URLSearchParams(window.location.search);
-  const oauthToken = params.get('oauth_token');
-  const oauthVerifier = params.get('oauth_verifier');
-  const code = params.get('code'); // 如果用 OAuth 2.0
-
-  let schemeUrl = 'mgoshort://auth';
-  const query = [];
-
-  if (oauthToken) query.push(`oauth_token=${encodeURIComponent(oauthToken)}`);
-  if (oauthVerifier) query.push(`oauth_verifier=${encodeURIComponent(oauthVerifier)}`);
-  if (code) query.push(`code=${encodeURIComponent(code)}`);
-
-  if (query.length) {
-    schemeUrl += '?' + query.join('&');
-  }
-
-  // 自动跳转
-  setTimeout(() => {
-    window.location.href = schemeUrl;
-  }, 1200);
-
-  // 按钮兜底
-  document.body.innerHTML += `<p><a href="${schemeUrl}">打开应用</a></p>`;
+  const schemeUrl = 'mgoshort://auth?' + params.toString();
+  // 自动跳转到 App
+  window.location.href = schemeUrl;
 </script>
+</head>
+<body>
+<p>验证完成，正在返回应用...</p>
+<p><a href="#" onclick="window.location.href=schemeUrl">点此返回</a></p>
+</body>
+</html>
